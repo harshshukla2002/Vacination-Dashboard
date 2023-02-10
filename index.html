@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Masai Vaccination</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div id="nav">
+        <a href="register.html"> Register </a>
+        <a href="index.html"> Dashboard</a>
+        <a href="vaccinated.html">vaccinated</a>
+    </div>
+
+    <select id="filterpri">
+        <option value="">Select</option>
+        <option value="p0">p0</option>
+        <option value="p1">p1</option>
+        <option value="p2">p2</option>
+        <option value="p3">p3</option>
+    </select>
+    <select id="sort">
+        <option value="">Select</option>
+        <option value="low">Low To High </option>
+        <option value="high">High To low </option>
+    </select>
+
+    <select id="filtervax">
+        <option value="">Select</option>
+        <option value="covishield">Covishield</option>
+        <option value="covaxin">Covaxin</option>
+        <option value="sputnik">Sputnik</option>
+    </select>
+
+    <div id="table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Designation</th>
+                    <th>Priority</th>
+                    <th>Vaccine</th>
+                    <th>Otp</th>
+                    <th>Delete</th>
+                    <th>Vaccine</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
+
+<script>
+    let data = JSON.parse(localStorage.getItem("registered")) || [];
+    let tbody = document.querySelector("tbody");
+
+    display(data)
+
+    function display(data) {
+        tbody.innerHTML = null;
+        data.forEach(function (ele, index) {
+            let otp = parseInt(Math.random(2) * 10000)
+            let row = document.createElement("tr")
+            let td1 = document.createElement("td")
+            td1.innerText = ele.id
+            let td2 = document.createElement("td")
+            td2.innerText = ele.name
+            let td3 = document.createElement("td")
+            td3.innerText = ele.age
+            let td4 = document.createElement("td")
+            td4.innerText = ele.designation
+            let td5 = document.createElement("td")
+            td5.innerText = ele.priority
+            let td6 = document.createElement("td")
+            td6.innerText = ele.vaccine
+            let td7 = document.createElement("td")
+            td7.innerText = otp
+            let td8 = document.createElement("td")
+            td8.innerText = "Delete";
+            td8.addEventListener("click", function () {
+                deletedata(data, index)
+            })
+            let td9 = document.createElement("td")
+            td9.innerText = "vaccinated"
+            td9.addEventListener("click", function () {
+                addData("vaccinated", ele)
+                deletedata(data, index)
+            })
+            row.append(td1, td2, td3, td4, td5, td6, td7, td8, td9);
+            tbody.append(row);
+        });
+    }
+
+    function deletedata(data, index) {
+        data.splice(index, 1)
+        localStorage.setItem("registered", JSON.stringify(data))
+        display(data)
+    }
+
+    function addData(key, value) {
+        prompt("Enter Otp")
+        let NewData = JSON.parse(localStorage.getItem(key)) || []
+        NewData.push(value);
+        localStorage.setItem(key, JSON.stringify(NewData))
+    }
+
+    let filterpriority = document.querySelector("#filterpri");
+    filterpriority.addEventListener("change", function () {
+        if (filterpriority.value == "") {
+            display(data);
+        }
+        else {
+            let filterdata = data.filter(function (ele) {
+                return ele.priority == filterpriority.value
+            })
+            display(filterdata)
+        }
+    })
+
+    let filtervaccine = document.querySelector("#filtervax");
+    filtervaccine.addEventListener("change", function () {
+        if (filtervaccine.value == "") {
+            display(data);
+        }
+        else {
+            let filterdata = data.filter(function (ele) {
+                return ele.vaccine == filtervaccine.value
+            })
+            display(filterdata)
+        }
+    })
+
+    let agesort = document.querySelector("#sort")
+    agesort.addEventListener('change', Search)
+    function Search() {
+        if (agesort.value == "") {
+            display(data)
+        }
+        else if (agesort.value == "low") {
+            let bag=[];
+             data.filter(function (ele) {
+                bag.push(ele.age)
+                bag.sort();
+            })
+            let s=[];
+            let filterdata=bag.filter(function(ele){
+                let rem;
+                data.filter(function(el){
+                    if(ele==el.age){
+                       rem =  el;
+                    }
+                })
+                s.push(rem)
+            })
+            //console.log(filterdata)
+        
+            display(s)
+        }
+         else if (agesort.value == "high") {
+            let bag=[];
+             data.filter(function (ele) {
+                bag.push(ele.age)
+                bag.sort();
+            })
+            let s=[];
+            for(let i=bag.length-1;i>=0;i--){
+                let rem;
+                data.filter(function(el){
+                    if(bag[i]==el.age){
+                       rem =  el;
+                    }
+                })
+                s.push(rem)
+            }
+
+            display(s)
+        }
+    }
+</script>

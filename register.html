@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Masai Vaccination </title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div id="nav">
+        <a href="register.html"> Register </a>
+        <a href="index.html"> Dashboard</a>
+        <a href="vaccinated.html">vaccinated</a>
+    </div>
+    <div id="register">
+        <h1>Registration</h1>
+        <form>
+            <label>Id</label> <br>
+            <input type="number" placeholder="Enter Id" id="uniqueid" required> <br>
+            <label>Name</label> <br>
+            <input type="text" placeholder="Enter Name" id="name" minlength="4" maxlength="20" required> <br>
+            <label>Age</label> <br>
+            <input type="number" placeholder="Enter age" id="age" min="18" max="40" required> <br>
+            <label>Designation</label> <br>
+            <select id="designation" required>
+                <option value="">Select</option>
+                <option value="student">Student</option>
+                <option value="employee">Employee</option>
+            </select> <br>
+            <label for="">Priority</label> <br>
+            <select id="priority" required>
+                <option value="">Select</option>
+                <option value="p0">p0</option>
+                <option value="p1">p1</option>
+                <option value="p2">p2</option>
+                <option value="p3">p3</option>
+            </select> <br>
+            <label for="">Vaccine</label> <br>
+            <select id="vaccine" required>
+                <option value="">Select</option>
+                <option value="covishield">Covishield</option>
+                <option value="covaxin">Covaxin</option>
+                <option value="sputnik">Sputnik</option>
+            </select> <br>
+            <input type="submit">
+        </form>
+    </div>
+</body>
+
+</html>
+<script>
+    let data = JSON.parse(localStorage.getItem("registered")) || [];
+    document.querySelector("form").addEventListener("submit", store)
+
+    function store(event) {
+        event.preventDefault();
+        let bag;
+        let id = document.querySelector("#uniqueid").value;
+        let name = document.querySelector("#name").value;
+        let age = document.querySelector("#age").value;
+        let des = document.querySelector("#designation").value;
+        let pri = document.querySelector("#priority").value;
+        let vac = document.querySelector("#vaccine").value;
+        let obj = {}
+
+        for (let el of data) {
+            if (id == el.id) {
+                bag = "false"
+            }
+        }
+        if (bag == "false") {
+            alert("Already Exist")
+        }
+        else {
+            obj = {
+                id: id,
+                name: name,
+                age: age,
+                designation: des,
+                priority: pri,
+                vaccine: vac
+            }
+            data.push(obj)
+            localStorage.setItem("registered", JSON.stringify(data))
+            window.location.reload();
+        }
+        
+    }
+
+</script>
